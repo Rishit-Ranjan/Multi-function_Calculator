@@ -1,0 +1,119 @@
+import tkinter as tk
+from tkinter import ttk
+import math
+
+class AreaCalculator:
+    def __init__(self, master):
+        self.master = master
+        master.configure(bg="#f7f7f7")
+
+        # --- Main layout ---
+        self.main_frame = tk.Frame(master, bg="#f7f7f7")
+        self.main_frame.pack(padx=20, pady=20, fill="both", expand=True)
+
+        # --- Shape Selection ---
+        tk.Label(self.main_frame, text="Select a shape:", font=("Arial", 12), bg="#f7f7f7").pack(pady=(0, 5))
+        self.shape_var = tk.StringVar()
+        self.shape_selector = ttk.Combobox(self.main_frame, textvariable=self.shape_var, font=("Arial", 11), state="readonly")
+        self.shapes = ('Circle', 'Triangle', 'Square', 'Rectangle')
+        self.shape_selector['values'] = self.shapes
+        self.shape_selector.pack(pady=5, fill="x")
+        self.shape_selector.bind("<<ComboboxSelected>>", self.update_ui)
+
+        # --- Dynamic Input Fields Frame ---
+        self.input_frame = tk.Frame(self.main_frame, bg="#f7f7f7")
+        self.input_frame.pack(pady=10, fill="x")
+
+        # --- Result Display ---
+        self.result_label = tk.Label(self.main_frame, text="Area: -", font=("Arial", 14, "bold"), bg="#f7f7f7")
+        self.result_label.pack(pady=10)
+
+        # --- Input widgets for each shape ---
+        self.input_widgets = {}
+        self.input_vars = {}
+        self.create_input_fields()
+
+        # Set a default selection
+        self.shape_selector.set(self.shapes[0])
+        self.update_ui()
+
+    def create_input_fields(self):
+        """Creates all possible input fields and hides them initially."""
+        common_entry_config = {"font": ("Consolas", 12), "bg": "#e6e8ec", "bd": 0}
+        common_label_config = {"font": ("Arial", 11), "bg": "#f7f7f7"}
+
+        # Circle
+        self.input_widgets['Circle'] = [
+            (tk.Label(self.input_frame, text="Radius:", **common_label_config), tk.Entry(self.input_frame, **common_entry_config))
+        ]
+        # Triangle
+        self.input_widgets['Triangle'] = [
+            (tk.Label(self.input_frame, text="Base:", **common_label_config), tk.Entry(self.input_frame, **common_entry_config)),
+            (tk.Label(self.input_frame, text="Height:", **common_label_config), tk.Entry(self.input_frame, **common_entry_config))
+        ]
+        # Square
+        self.input_widgets['Square'] = [
+            (tk.Label(self.input_frame, text="Side:", **common_label_config), tk.Entry(self.input_frame, **common_entry_config))
+        ]
+        # Rectangle
+        self.input_widgets['Rectangle'] = [
+            (tk.Label(self.input_frame, text="Length:", **common_label_config), tk.Entry(self.input_frame, **common_entry_config)),
+            (tk.Label(self.input_frame, text="Width:", **common_label_config), tk.Entry(self.input_frame, **common_entry_config))
+        ]
+
+        # Bind calculation event to all entry widgets
+        for shape in self.input_widgets:
+            for _, entry in self.input_widgets[shape]:
+                entry.bind("<KeyRelease>", self.calculate_area)
+
+    def update_ui(self, event=None):
+        """Hides all input fields and shows only the ones for the selected shape."""
+        # Hide all widgets in the input frame
+        for widget in self.input_frame.winfo_children():
+            widget.grid_forget()
+
+        shape = self.shape_var.get()
+        if shape in self.input_widgets:
+            for i, (label, entry) in enumerate(self.input_widgets[shape]):
+                label.grid(row=i, column=0, sticky="w", padx=5, pady=5)
+                entry.grid(row=i, column=1, sticky="ew", padx=5, pady=5)
+                entry.delete(0, tk.END)
+
+        self.input_frame.grid_columnconfigure(1, weight=1)
+        self.calculate_area() # Reset/clear the area label
+
+    def calculate_area(self, event=None):
+        """Calculates the area based on the current inputs and updates the display."""
+        shape = self.shape_var.get()
+        area = None
+        try:
+            if shape == 'Circle':
+                radius = float(self.input_widgets['Circle'][0][1].get())
+                area = math.pi * radius**2
+            elif shape == 'Triangle':
+                base = float(self.input_widgets['Triangle'][0][1].get())
+                height = float(self.input_widgets['Triangle'][1][1].get())
+                area = 0.5 * base * height
+            elif shape == 'Square':
+                side = float(self.input_widgets['Square'][0][1].get())
+                area = side**2
+            elif shape == 'Rectangle':
+                length = float(self.input_widgets['Rectangle'][0][1].get())
+                width = float(self.input_widgets['Rectangle'][1][1].get())
+                area = length * width
+
+            if area is not None:
+                self.result_label.config(text=f"Area: {area:.4f}")
+            else:
+                self.result_label.config(text="Area: -")
+
+        except (ValueError, IndexError):
+            # Catches empty fields or non-numeric input
+            self.result_label.config(text="Area: -")
+        except Exception as e:
+            self.result_label.config(text=f"Error: {e}")
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = AreaCalculator(root)
+    root.mainloop()

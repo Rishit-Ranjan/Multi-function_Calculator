@@ -3,9 +3,7 @@ import tkinter as tk
 class ProgrammableCalculator:
     def __init__(self, master):
         self.master = master
-        master.title("Programmable Calculator")
         master.configure(bg="#f7f7f7")
-        master.resizable(False, False)
 
         self.user_env = {}
 
