@@ -60,7 +60,3 @@ The project is organized into modular, class-based components for clarity and ma
 -   `standard_calculator.py`: Contains the `StandardCalculator` class, which defines the UI and logic for the standard arithmetic calculator.
 -   `area_calculator.py`: Contains the `AreaCalculator` class. It provides a dynamic UI for selecting a shape and calculating its area in real-time.
 -   `programmable_calculator.py`: Contains the `ProgrammableCalculator` class, which implements a simple Python environment for executing code.
-
----
-
-*This project was developed as part of the Learntricks Internship program.*
