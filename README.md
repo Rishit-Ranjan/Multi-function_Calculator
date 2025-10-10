@@ -20,10 +20,10 @@ A versatile desktop calculator application built with Python and Tkinter, combin
 
 **Tab 1: Standard Calculator**
 
-![1760074292759](image/README/1760074292759.png)
+![1760074292759](image/README/1760074292759.png)<br/>
 **Tab 2: Area Calculator**
 
-![1760074331592](image/README/1760074331592.png)
+![1760074331592](image/README/1760074331592.png)<br/>
 **Tab 3: Programmable Calculator**
 
 ![1760074380687](image/README/1760074380687.png)
