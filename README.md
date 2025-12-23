@@ -1,4 +1,4 @@
-# Multi-Function Calculator
+# Multi-Functional Calculator
 
 A versatile desktop calculator application built with Python and Tkinter, combining multiple calculator types into a single, user-friendly, tabbed interface.
 
