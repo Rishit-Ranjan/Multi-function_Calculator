@@ -22,13 +22,16 @@ A versatile desktop calculator application built with Python and Tkinter, combin
 
 **Tab 1: Standard Calculator**
 
-![1760074292759](image/README/1760074292759.png)<br/><br/>
+<img width="661" height="727" alt="image" src="https://github.com/user-attachments/assets/c189d2ad-0e15-4dbc-b7d8-de6252a3e85f" /><br/><br/>
 **Tab 2: Area Calculator**
 
-![1760074331592](image/README/1760074331592.png)<br/><br/>
+<img width="661" height="727" alt="image" src="https://github.com/user-attachments/assets/fa3d4052-b17e-4957-b853-08716e9176d6" /><br/><br/>
 **Tab 3: Programmable Calculator**
 
-![1760074380687](image/README/1760074380687.png)
+<img width="661" height="727" alt="image" src="https://github.com/user-attachments/assets/2ad9054c-9e40-4f77-bb5c-6678cc684d65" /><br/><br/>
+
+**Tab 4: Scientific Calculator**
+<img width="661" height="727" alt="image" src="https://github.com/user-attachments/assets/143dda36-6122-4c98-92e9-d5df6cf49d8a" />
 
 
 ## How to Run (Windows)
