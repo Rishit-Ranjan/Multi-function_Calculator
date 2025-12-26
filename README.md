@@ -29,14 +29,14 @@ A versatile desktop calculator application built with Python and Tkinter, combin
 ![1760074380687](image/README/1760074380687.png)
 
 
-## How to Run
+## How to Run (Windows)
 
-1. Clone the repository
-2. Head over to dist folder and double click to run the main_app.exe.
-3. It will run the python window application.
+1. Go to the **Releases** section of this repository.
+2. Download the latest `main_app.exe`.
+3. Double-click the `.exe` file to launch the application.
 
-Note: No need to download python or Tkinter library.
-    
+> **Note:** No need to install Python or Tkinter. Everything is bundled inside the executable.
+
 
 ## Code Structure
 
