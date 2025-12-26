@@ -5,6 +5,7 @@ from tkinter import ttk
 from standard_calculator import StandardCalculator
 from area_calculator import AreaCalculator
 from programmable_calculator import ProgrammableCalculator
+from history import CalculationHistory
 
 class MainApplication:
     def __init__(self, master):
@@ -21,20 +22,25 @@ class MainApplication:
         self.standard_calc_frame = tk.Frame(self.notebook, width=400, height=500)
         self.area_calc_frame = tk.Frame(self.notebook, width=400, height=500)
         self.prog_calc_frame = tk.Frame(self.notebook, width=400, height=500)
+        self.history_frame = tk.Frame(self.notebook, width=400, height=500)
 
         self.standard_calc_frame.pack(fill="both", expand=True)
         self.area_calc_frame.pack(fill="both", expand=True)
         self.prog_calc_frame.pack(fill="both", expand=True)
+        self.history_frame.pack(fill="both", expand=True)
 
         # Add frames to the notebook
         self.notebook.add(self.standard_calc_frame, text="Standard")
         self.notebook.add(self.area_calc_frame, text="Area")
         self.notebook.add(self.prog_calc_frame, text="Programmable")
+        self.notebook.add(self.history_frame, text="History")
 
-        # Instantiate each calculator into its respective frame
-        StandardCalculator(self.standard_calc_frame)
-        AreaCalculator(self.area_calc_frame)
-        ProgrammableCalculator(self.prog_calc_frame)
+        # Instantiate the shared history manager and calculators
+        self.history = CalculationHistory(self.history_frame)
+
+        StandardCalculator(self.standard_calc_frame, history=self.history)
+        AreaCalculator(self.area_calc_frame, history=self.history)
+        ProgrammableCalculator(self.prog_calc_frame, history=self.history)
 
 if __name__ == "__main__":
     root = tk.Tk()

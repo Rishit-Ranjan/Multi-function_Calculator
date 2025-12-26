@@ -1,8 +1,9 @@
 import tkinter as tk
 
 class StandardCalculator:
-    def __init__(self, master):
+    def __init__(self, master, history=None):
         self.master = master
+        self.history = history
         master.configure(bg="#f7f7f7")
 
         # Flag to track if the last operation was an evaluation
@@ -20,18 +21,50 @@ class StandardCalculator:
         for i in range(1, 6):
             master.grid_rowconfigure(i, weight=1)
 
+        # Keyboard bindings (global for the app)
+        try:
+            master.bind_all("<Key>", self.on_key)
+        except Exception:
+            pass
+
+    def evaluate_expression(self):
+        expr = self.entry.get()
+        if not expr.strip():
+            return
+        try:
+            result = eval(expr)
+            result_str = str(result)
+            self.entry.delete(0, tk.END)
+            self.entry.insert(tk.END, result_str)
+            self.last_was_equal = True
+            if self.history:
+                self.history.add_entry(f"{expr} = {result_str}")
+        except ZeroDivisionError:
+            msg = "Error: Divide by zero"
+            self.entry.delete(0, tk.END)
+            self.entry.insert(tk.END, msg)
+            self.last_was_equal = True
+            if self.history:
+                self.history.add_entry(f"{expr} -> {msg}")
+        except (SyntaxError, NameError):
+            msg = "Error: Invalid expression"
+            self.entry.delete(0, tk.END)
+            self.entry.insert(tk.END, msg)
+            self.last_was_equal = True
+            if self.history:
+                self.history.add_entry(f"{expr} -> {msg}")
+        except Exception as e:
+            msg = f"Error: {e}"
+            self.entry.delete(0, tk.END)
+            self.entry.insert(tk.END, msg)
+            self.last_was_equal = True
+            if self.history:
+                self.history.add_entry(f"{expr} -> {msg}")
+
     def on_click(self, event):
         text = event.widget["text"]
         if text == "=":
-            try:
-                result = str(eval(self.entry.get()))
-                self.entry.delete(0, tk.END)
-                self.entry.insert(tk.END, result)
-                self.last_was_equal = True
-            except Exception:
-                self.entry.delete(0, tk.END)
-                self.entry.insert(tk.END, "Error")
-                self.last_was_equal = True
+            self.evaluate_expression()
         elif text == "AC":
             self.entry.delete(0, tk.END)
             self.entry.insert(tk.END, "0")
@@ -44,6 +77,46 @@ class StandardCalculator:
                 self.last_was_equal = False
             
             self.entry.insert(tk.END, text)
+
+    def on_key(self, event):
+        # Handle keyboard input: digits/operators, Enter, Backspace, Esc
+        keysym = event.keysym
+        ch = event.char
+
+        if keysym in ("Return", "KP_Enter"):
+            self.evaluate_expression()
+            return
+
+        if keysym == "Escape":
+            # Clear (AC)
+            self.entry.delete(0, tk.END)
+            self.entry.insert(tk.END, "0")
+            self.last_was_equal = False
+            return
+
+        if keysym == "BackSpace":
+            cur = self.entry.get()
+            if cur in ("", "0", "Error"):
+                self.entry.delete(0, tk.END)
+                self.entry.insert(tk.END, "0")
+            else:
+                # remove last character
+                new = cur[:-1]
+                if new == "" or new == "-" or new is None:
+                    new = "0"
+                self.entry.delete(0, tk.END)
+                self.entry.insert(tk.END, new)
+            self.last_was_equal = False
+            return
+
+        # Accept only characters 0-9 and operators . + - * /
+        if ch and ch in '0123456789.+-*/':
+            if self.entry.get() == "0" or self.entry.get() == "Error" or (self.last_was_equal and ch.isdigit()):
+                self.entry.delete(0, tk.END)
+            if self.last_was_equal:
+                self.last_was_equal = False
+            self.entry.insert(tk.END, ch)
+            return
 
     def create_buttons(self):
         btn_cfg = {

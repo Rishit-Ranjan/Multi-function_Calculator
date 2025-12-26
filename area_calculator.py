@@ -3,8 +3,9 @@ from tkinter import ttk
 import math
 
 class AreaCalculator:
-    def __init__(self, master):
+    def __init__(self, master, history=None):
         self.master = master
+        self.history = history
         master.configure(bg="#f7f7f7")
 
         # --- Main layout ---
@@ -25,8 +26,14 @@ class AreaCalculator:
         self.input_frame.pack(pady=10, fill="x")
 
         # --- Result Display ---
-        self.result_label = tk.Label(self.main_frame, text="Area: -", font=("Arial", 14, "bold"), bg="#f7f7f7")
-        self.result_label.pack(pady=10)
+        result_frame = tk.Frame(self.main_frame, bg="#f7f7f7")
+        result_frame.pack(pady=10, fill="x")
+        self.result_label = tk.Label(result_frame, text="Area: -", font=("Arial", 14, "bold"), bg="#f7f7f7")
+        self.result_label.pack(side="left", padx=(0,8))
+
+        # Save to history button
+        self.save_btn = tk.Button(result_frame, text="Save", command=self.save_to_history, bg="#2ecc71", fg="white", bd=0)
+        self.save_btn.pack(side="right")
 
         # --- Input widgets for each shape ---
         self.input_widgets = {}
@@ -108,10 +115,42 @@ class AreaCalculator:
                 self.result_label.config(text="Area: -")
 
         except (ValueError, IndexError):
-            # Catches empty fields or non-numeric input
-            self.result_label.config(text="Area: -")
+            # Empty or non-numeric input
+            self.result_label.config(text="Area: - (incomplete)")
         except Exception as e:
+            # Unexpected errors
             self.result_label.config(text=f"Error: {e}")
+            if self.history:
+                try:
+                    self.history.add_entry(f"Area calc error: {e}")
+                except Exception:
+                    pass
+
+    def save_to_history(self):
+        if not self.history:
+            return
+        shape = self.shape_var.get()
+        try:
+            if shape == 'Circle':
+                radius = self.input_widgets['Circle'][0][1].get()
+                area_text = self.result_label.cget("text")
+                self.history.add_entry(f"Circle radius={radius} -> {area_text}")
+            elif shape == 'Triangle':
+                base = self.input_widgets['Triangle'][0][1].get()
+                height = self.input_widgets['Triangle'][1][1].get()
+                area_text = self.result_label.cget("text")
+                self.history.add_entry(f"Triangle base={base}, height={height} -> {area_text}")
+            elif shape == 'Square':
+                side = self.input_widgets['Square'][0][1].get()
+                area_text = self.result_label.cget("text")
+                self.history.add_entry(f"Square side={side} -> {area_text}")
+            elif shape == 'Rectangle':
+                length = self.input_widgets['Rectangle'][0][1].get()
+                width = self.input_widgets['Rectangle'][1][1].get()
+                area_text = self.result_label.cget("text")
+                self.history.add_entry(f"Rectangle L={length}, W={width} -> {area_text}")
+        except Exception:
+            pass
 
 if __name__ == "__main__":
     root = tk.Tk()

@@ -1,8 +1,9 @@
 import tkinter as tk
 
 class ProgrammableCalculator:
-    def __init__(self, master):
+    def __init__(self, master, history=None):
         self.master = master
+        self.history = history
         master.configure(bg="#f7f7f7")
 
         self.user_env = {}
@@ -31,11 +32,28 @@ class ProgrammableCalculator:
             if expr.strip().startswith("def ") or "=" in expr:
                 exec(expr, {}, self.user_env)
                 self.display.insert(tk.END, "OK\n")
+                if self.history:
+                    self.history.add_entry(f"{expr} -> OK")
             else:
                 result = eval(expr, {}, self.user_env)
                 self.display.insert(tk.END, f"{result}\n")
+                if self.history:
+                    self.history.add_entry(f"{expr} = {result}")
+        except ZeroDivisionError:
+            msg = "Error: Division by zero"
+            self.display.insert(tk.END, f"{msg}\n")
+            if self.history:
+                self.history.add_entry(f"{expr} -> {msg}")
+        except SyntaxError:
+            msg = "Error: Invalid expression"
+            self.display.insert(tk.END, f"{msg}\n")
+            if self.history:
+                self.history.add_entry(f"{expr} -> {msg}")
         except Exception as e:
-            self.display.insert(tk.END, f"Error: {e}\n")
+            msg = f"Error: {e}"
+            self.display.insert(tk.END, f"{msg}\n")
+            if self.history:
+                self.history.add_entry(f"{expr} -> {msg}")
         self.display.see(tk.END)
         self.input_var.set("")
 
