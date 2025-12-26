@@ -37,7 +37,7 @@ A versatile desktop calculator application built with Python and Tkinter, combin
 ## How to Run (Windows)
 
 1. Go to the **Releases** section of this repository.
-2. Download the latest `main_app.exe`.
+2. Download the latest `calculator_app.exe`.
 3. Double-click the `.exe` file to launch the application.
 
 > **Note:** No need to install Python or Tkinter. Everything is bundled inside the executable.
@@ -46,10 +46,13 @@ A versatile desktop calculator application built with Python and Tkinter, combin
 
 The project is organized into modular, class-based components for clarity and maintainability.
 
--   `main_app.py`: The main entry point for the application. It creates the main window and the tabbed notebook interface that houses the other calculators.
+-   `calculator_app.py`: The main entry point for the application. It creates the main window and the tabbed notebook interface that houses the other calculators.
 -   `standard_calculator.py`: Contains the `StandardCalculator` class, which defines the UI and logic for the standard arithmetic calculator.
 -   `area_calculator.py`: Contains the `AreaCalculator` class. It provides a dynamic UI for selecting a shape and calculating its area in real-time.
 -   `programmable_calculator.py`: Contains the `ProgrammableCalculator` class, which implements a simple Python environment for executing code.
+-   `scientific_calculator.py`: Contains the `ScientificCalculator` class, which implements a scientific calculator with features like trigonomety, logarithm, square root and factorial
+
+
 
 **Build**
-python -m PyInstaller --onefile --windowed main_app.py
+python -m PyInstaller --onefile --windowed calculator_app.py
