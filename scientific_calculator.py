@@ -28,11 +28,10 @@ class ScientificCalculator:
         ]
 
         for (text, r, c) in btns:
-            b = tk.Button(master, text=text, command=lambda t=text: self.on_click(t), font=("Arial", 12), bd=0)
-            b.grid(row=r, column=c, padx=6, pady=6, sticky="nsew")
+            b = tk.Button(master, text=text, command=lambda t=text: self.on_click(t), font=("Arial", 11), bd=0, relief="flat")
+            b.grid(row=r, column=c, padx=4, pady=4, sticky="nsew")
 
-        for i in range(4):
-            master.grid_columnconfigure(i, weight=1)
+        # Configure button rows to expand
         for i in range(1, 7):
             master.grid_rowconfigure(i, weight=1)
 
