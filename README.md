@@ -1,6 +1,8 @@
-# Multi-Functional Calculator
+# Multi-Function Calculator
 
 A versatile desktop calculator application built with Python and Tkinter, combining multiple calculator types into a single, user-friendly, tabbed interface.
+
+[![Download](https://img.shields.io/badge/Download-Windows_EXE-blue)](../../releases)
 
 ## Features
 
