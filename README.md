@@ -37,7 +37,6 @@ A versatile desktop calculator application built with Python and Tkinter, combin
 
 > **Note:** No need to install Python or Tkinter. Everything is bundled inside the executable.
 
-
 ## Code Structure
 
 The project is organized into modular, class-based components for clarity and maintainability.
