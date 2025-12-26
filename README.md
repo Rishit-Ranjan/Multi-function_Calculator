@@ -28,28 +28,13 @@ A versatile desktop calculator application built with Python and Tkinter, combin
 
 ![1760074380687](image/README/1760074380687.png)
 
-## Prerequisites
-
-- [Python 3.x](https://www.python.org/downloads/)
-- Tkinter (usually included with standard Python installations on Windows and macOS)
-
-*Note for Linux users: You may need to install Tkinter separately using your package manager, e.g., `sudo apt-get install python3-tk`.*
 
 ## How to Run
 
-1.  Ensure you have all the project files in the same directory:
-    - `main_app.py`
-    - `standard_calculator.py`
-    - `area_calculator.py`
-    - `programmable_calculator.py`
+1. Head over to dist folder and double click to run the main_app.exe.
+2. It will run the python window application.
 
-2.  Open your terminal or command prompt.
-
-3.  Navigate to the directory where you saved the files.
-
-4.  Run the main application file:
-    ```bash
-    python main_app.py
+Note: No need to download python or Tkinter library.
     ```
 
 ## Code Structure
