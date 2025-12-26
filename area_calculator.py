@@ -3,31 +3,40 @@ from tkinter import ttk
 import math
 
 class AreaCalculator:
-    def __init__(self, master, history=None):
+    def __init__(self, master, history=None, settings=None):
         self.master = master
         self.history = history
+        self.settings = settings or {}
         master.configure(bg="#f7f7f7")
+        
+        # Configure grid for responsiveness
+        master.grid_rowconfigure(0, weight=1)
+        master.grid_columnconfigure(0, weight=1)
 
         # --- Main layout ---
         self.main_frame = tk.Frame(master, bg="#f7f7f7")
-        self.main_frame.pack(padx=20, pady=20, fill="both", expand=True)
+        self.main_frame.grid(row=0, column=0, sticky="nsew", padx=20, pady=20)
+        self.main_frame.grid_rowconfigure(1, weight=1)
+        self.main_frame.grid_columnconfigure(0, weight=1)
 
         # --- Shape Selection ---
-        tk.Label(self.main_frame, text="Select a shape:", font=("Arial", 12), bg="#f7f7f7").pack(pady=(0, 5))
+        tk.Label(self.main_frame, text="Select a shape:", font=("Arial", 12), bg="#f7f7f7").grid(row=0, column=0, sticky="w", pady=(0, 5))
         self.shape_var = tk.StringVar()
         self.shape_selector = ttk.Combobox(self.main_frame, textvariable=self.shape_var, font=("Arial", 11), state="readonly")
         self.shapes = ('Circle', 'Triangle', 'Square', 'Rectangle')
         self.shape_selector['values'] = self.shapes
-        self.shape_selector.pack(pady=5, fill="x")
+        self.shape_selector.grid(row=0, column=1, sticky="ew", pady=5)
         self.shape_selector.bind("<<ComboboxSelected>>", self.update_ui)
+        self.main_frame.grid_columnconfigure(1, weight=1)
 
         # --- Dynamic Input Fields Frame ---
         self.input_frame = tk.Frame(self.main_frame, bg="#f7f7f7")
-        self.input_frame.pack(pady=10, fill="x")
+        self.input_frame.grid(row=1, column=0, columnspan=2, sticky="ew", pady=10)
+        self.input_frame.grid_columnconfigure(1, weight=1)
 
         # --- Result Display ---
         result_frame = tk.Frame(self.main_frame, bg="#f7f7f7")
-        result_frame.pack(pady=10, fill="x")
+        result_frame.grid(row=2, column=0, columnspan=2, sticky="ew", pady=10)
         self.result_label = tk.Label(result_frame, text="Area: -", font=("Arial", 14, "bold"), bg="#f7f7f7")
         self.result_label.pack(side="left", padx=(0,8))
 
@@ -87,6 +96,7 @@ class AreaCalculator:
                 entry.delete(0, tk.END)
 
         self.input_frame.grid_columnconfigure(1, weight=1)
+        self.input_frame.grid_rowconfigure(0, weight=1)
         self.calculate_area() # Reset/clear the area label
 
     def calculate_area(self, event=None):
@@ -110,7 +120,8 @@ class AreaCalculator:
                 area = length * width
 
             if area is not None:
-                self.result_label.config(text=f"Area: {area:.4f}")
+                prec = int(self.settings.get("decimal_precision", 4)) if self.settings else 4
+                self.result_label.config(text=f"Area: {area:.{prec}f}")
             else:
                 self.result_label.config(text="Area: -")
 
@@ -149,6 +160,27 @@ class AreaCalculator:
                 width = self.input_widgets['Rectangle'][1][1].get()
                 area_text = self.result_label.cget("text")
                 self.history.add_entry(f"Rectangle L={length}, W={width} -> {area_text}")
+        except Exception:
+            pass
+
+    def apply_theme(self, theme: dict):
+        try:
+            bg = theme.get("bg", "#f7f7f7")
+            fg = theme.get("fg", "#232b36")
+            entry_bg = theme.get("entry_bg", "#ffffff")
+            self.main_frame.configure(bg=bg)
+            self.result_label.configure(bg=bg, fg=fg)
+            try:
+                self.save_btn.configure(bg=entry_bg, fg=fg)
+            except Exception:
+                pass
+            for widgets in self.input_widgets.values():
+                for label, entry in widgets:
+                    try:
+                        label.configure(bg=bg, fg=fg)
+                        entry.configure(bg=entry_bg, fg=fg)
+                    except Exception:
+                        pass
         except Exception:
             pass
 

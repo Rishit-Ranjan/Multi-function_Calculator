@@ -1,9 +1,10 @@
 import tkinter as tk
 
 class StandardCalculator:
-    def __init__(self, master, history=None):
+    def __init__(self, master, history=None, settings=None):
         self.master = master
         self.history = history
+        self.settings = settings or {}
         master.configure(bg="#f7f7f7")
 
         # Flag to track if the last operation was an evaluation
@@ -27,13 +28,31 @@ class StandardCalculator:
         except Exception:
             pass
 
+    def apply_theme(self, theme: dict):
+        try:
+            entry_bg = theme.get("entry_bg", "#ffffff")
+            fg = theme.get("fg", "#232b36")
+            self.entry.configure(bg=entry_bg, fg=fg)
+            for b in getattr(self, "_buttons", []):
+                try:
+                    b.configure(bg=entry_bg, fg=fg)
+                except Exception:
+                    pass
+        except Exception:
+            pass
+
     def evaluate_expression(self):
         expr = self.entry.get()
         if not expr.strip():
             return
         try:
             result = eval(expr)
-            result_str = str(result)
+            # format floats according to settings
+            if isinstance(result, float) and self.settings and "decimal_precision" in self.settings:
+                prec = int(self.settings.get("decimal_precision", 4))
+                result_str = f"{result:.{prec}f}"
+            else:
+                result_str = str(result)
             self.entry.delete(0, tk.END)
             self.entry.insert(tk.END, result_str)
             self.last_was_equal = True
@@ -136,6 +155,7 @@ class StandardCalculator:
             (".", 5, 2, "#232b36", "white"),
         ]
 
+        self._buttons = []
         for btn_data in buttons:
             text, row, col, bg, fg = btn_data[:5]
             colspan = btn_data[5] if len(btn_data) > 5 else 1
@@ -144,6 +164,7 @@ class StandardCalculator:
             b = tk.Button(self.master, text=text, bg=bg, fg=fg, **btn_cfg)
             b.grid(row=row, column=col, columnspan=colspan, rowspan=rowspan, padx=6, pady=6, sticky="nsew")
             b.bind("<Button-1>", self.on_click)
+            self._buttons.append(b)
 
 if __name__ == "__main__":
     root = tk.Tk()
